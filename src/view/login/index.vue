@@ -1,3 +1,3 @@
 <template>
-  我是login
+  我是登录
 </template>
