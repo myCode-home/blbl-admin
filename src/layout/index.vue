@@ -1,22 +1,40 @@
 <template>
   <div class="common-layout">
-    <el-container>
-      <!-- <el-aside width="200px">Aside</el-aside> -->
+    <el-container class="common-layout-container">
       <BaseAside />
-      <el-container>
-        <el-header>Header</el-header>
-        <el-main>
-          <router-view />
-        </el-main>
+      <el-container
+        class="common-layout-main"
+        :style="{
+          width: statusStore.isFold ? 'calc(100vw - 70px)' : 'calc(100vw - 230px)',
+          transform: statusStore.isFold ? 'translateX(0)' : 'translateX(0px)',
+        }"
+      >
+        <BaseHeader />
+        <BaseMain />
       </el-container>
     </el-container>
   </div>
 </template>
 <script setup lang="ts">
 import BaseAside from '@/components/BaseAside.vue'
+import BaseHeader from '@/components/BaseHeader.vue'
+import BaseMain from '@/components/BaseMain.vue'
+import { useStatusStore } from '@/store/status'
+
+// 状态管理
+const statusStore = useStatusStore()
 </script>
 <style lang="scss" scoped>
 .common-layout {
-  background-color: #efefef;
+  height: 100%;
+  background-color: rgb(146, 54, 69);
+  .common-layout-container {
+    height: 100%;
+    .common-layout-main {
+      flex-direction: column;
+      background-color: #fff;
+      transition: all 0.2s ease-in-out;
+    }
+  }
 }
 </style>
