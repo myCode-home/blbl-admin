@@ -5,7 +5,6 @@
         <component :is="statusStore.isFold ? 'Expand' : 'Fold'" />
       </el-icon>
       <div class="tag-container">
-        <!-- closable -->
         <el-tag
           size="large"
           v-for="tag in statusStore.tags"
@@ -55,8 +54,8 @@ const handleFoldClick = () => {
 const handleClick = (tag: TagsItem) => {
   router.push(tag.path)
   statusStore.addTag(tag)
-  // console.log(tag)
 }
+
 const handleClose = (tag: TagsItem) => {
   // 如果删除的是非选中的项目
   if (tag.path !== router.currentRoute.value.path) {

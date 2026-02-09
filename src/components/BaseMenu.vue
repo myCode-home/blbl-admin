@@ -34,9 +34,7 @@ const props = defineProps({
   },
 })
 const handelClick = (item: any) => {
-  // console.log(item)
   router.push(item.meta.path)
-  // router.push({ name: item.name })
 }
 </script>
 <style lang="scss" scoped></style>
