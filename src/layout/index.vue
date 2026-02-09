@@ -6,7 +6,6 @@
         class="common-layout-main"
         :style="{
           width: statusStore.isFold ? 'calc(100vw - 70px)' : 'calc(100vw - 230px)',
-          transform: statusStore.isFold ? 'translateX(0)' : 'translateX(0px)',
         }"
       >
         <BaseHeader />
@@ -33,7 +32,7 @@ const statusStore = useStatusStore()
     .common-layout-main {
       flex-direction: column;
       background-color: #fff;
-      transition: all 0.2s ease-in-out;
+      transition: width 0.2s ease-in-out;
     }
   }
 }

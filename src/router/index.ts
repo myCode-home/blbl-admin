@@ -21,7 +21,7 @@ const routes = [
       },
       {
         path: 'auth',
-        meta: { id: '2', name: '权限管理', icon: 'Grid' },
+        meta: { id: '2', name: '权限管理', icon: 'Grid', redirect: '/auth/admin' },
         children: [
           {
             path: '',
@@ -52,7 +52,7 @@ const routes = [
       },
       {
         path: 'vppz',
-        meta: { id: '3', name: 'DIDI陪诊', icon: 'BellFilled' },
+        meta: { id: '3', name: 'DIDI陪诊', icon: 'BellFilled', redirect: '/vppz/staff' },
         children: [
           {
             path: '',

@@ -5,7 +5,7 @@
     active-text-color="#ffd04b"
     background-color="#545c64"
     class="el-menu-vertical-demo"
-    default-active="2"
+    :default-active="route.path"
     text-color="#fff"
     @open="handleOpen"
     @close="handleClose"
@@ -19,9 +19,12 @@
 import { useStatusStore } from '@/store/status'
 const statusStore = useStatusStore()
 import BaseMenu from '@/components/BaseMenu.vue'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 
 const router = useRouter()
+const route = useRoute()
+// console.log(route.path)
+
 const handleClose = () => {}
 const handleOpen = () => {}
 </script>
