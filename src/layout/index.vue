@@ -26,7 +26,7 @@ const statusStore = useStatusStore()
 <style lang="scss" scoped>
 .common-layout {
   height: 100%;
-  background-color: rgb(146, 54, 69);
+  // background-color: rgb(146, 54, 69);
   .common-layout-container {
     height: 100%;
     .common-layout-main {

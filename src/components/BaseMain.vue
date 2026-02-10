@@ -1,5 +1,5 @@
 <template>
-  <el-main style="background-color: pink">
+  <el-main style="background-color: #efefef">
     <router-view #default="{ Component }">
       <component :is="Component" />
     </router-view>

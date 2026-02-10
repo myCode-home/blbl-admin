@@ -33,6 +33,22 @@ export interface CheckCodeData {
     }
     code: number | string
 }
+
+export interface Menu {
+    id: number
+    label: string
+    children?: Menu[]
+    disabled?: boolean | string
+}
+// 权限列表的数据
+export interface MenuData {
+    code: number | string
+    data: Menu[]
+    message: string
+}
+
+
+
 // 兼容旧版本的类型别名
 export type RequestData = ApiResponse
 
@@ -41,3 +57,4 @@ export type RequestData = ApiResponse
 export type LoginResponse = LoginData
 export type CheckCodeResponse = ApiResponse<CheckCodeData>
 export type AuthenticationResponse = ApiResponse<{ success: boolean }>
+export type MenuResponse = MenuData
