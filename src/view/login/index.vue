@@ -137,13 +137,14 @@ const submitForm = async (form: any) => {
             passWord: ruleForm.value.passWord,
             validCode: ruleForm.value.check,
           })
-          if (res.data.code === 10000) {
+          // if (res.data.code === 10000) {
+          if (res.code === 10000) {
             ElMessage.success('注册成功！！！')
             initForm()
             handelRegister()
             return
           }
-          ElMessage.error(res.data.message.msg)
+          ElMessage.error(res.msg || '注册失败')
         } catch (error: any) {
           ElMessage.error(error.message)
         } finally {
@@ -155,19 +156,19 @@ const submitForm = async (form: any) => {
           const res = await useLoginService({
             userName: ruleForm.value.username,
             passWord: ruleForm.value.passWord,
-            // userName: '17393987803',
-            // passWord: 'admin23',
           })
           console.log(res, '登录接口返回数据')
           if (res.code === 10000) {
             ElMessage.success('登录成功！！！')
+            console.log(res.data)
+
             router.push('/')
             useUserStore().setToken(res.data.token)
             useUserStore().setUserInfo(res.data.userInfo)
             console.log(useUserStore().userInfo, 'userInfo', res.data.userInfo)
             return
           }
-          ElMessage.error(res.data.message)
+          ElMessage.error(res.message?.msg || '登录失败')
         } catch (error: any) {
           ElMessage.error(error.message)
         } finally {
@@ -202,8 +203,8 @@ const sendCheckCode = async () => {
   try {
     const res = await getCheckCodeService({ tel: ruleForm.value.username })
     console.log(res)
-    if (res.data.code !== 10000) {
-      return ElMessage.error(res.data.message.msg)
+    if (res.code !== 10000) {
+      return ElMessage.error(res.message?.msg || '验证码发送失败')
     }
     ElMessage.success('验证码发送成功！！！')
     checkBtn.text = `${checkBtn.timer}秒后重新获取`

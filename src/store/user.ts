@@ -23,6 +23,10 @@ export const useUserStore = defineStore('user', () => {
             name: ''
         }
     }
+    const handleLogout = () => {
+        removeToken()
+        removeUserInfo()
+    }
 
     return {
         token,
@@ -30,6 +34,10 @@ export const useUserStore = defineStore('user', () => {
         setToken,
         removeToken,
         setUserInfo,
-        removeUserInfo
+        removeUserInfo,
+        handleLogout
     }
-})
+}, {
+    persist: true
+}
+)

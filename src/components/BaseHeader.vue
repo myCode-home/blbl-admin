@@ -20,16 +20,22 @@
     </div>
     <div class="right">
       <div class="avata">
-        <el-avatar src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png" />
+        <el-avatar
+          :src="
+            useUserStore().userInfo.avatar ||
+            'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png'
+          "
+        />
       </div>
       <div class="user">
         <el-dropdown>
           <span class="el-dropdown-link">
-            admin<el-icon class="el-icon--right"><arrow-down /></el-icon>
+            {{ useUserStore().userInfo.name
+            }}<el-icon class="el-icon--right"><arrow-down /></el-icon>
           </span>
           <template #dropdown>
             <el-dropdown-menu>
-              <el-dropdown-item icon="Plus">退出登录</el-dropdown-item>
+              <el-dropdown-item icon="Plus" @click="handleLogout"> 退出登录</el-dropdown-item>
             </el-dropdown-menu>
           </template>
         </el-dropdown>
@@ -39,9 +45,12 @@
 </template>
 
 <script setup lang="ts">
+import { ElMessage } from 'element-plus'
+import { toRefs } from 'vue'
 import { useStatusStore } from '@/store/status'
 import { watch } from 'vue'
 import { useRouter } from 'vue-router'
+import { useUserStore } from '@/store/user'
 
 import type { TagsItem } from '@/type/public'
 
@@ -72,6 +81,12 @@ const handleClose = (tag: TagsItem) => {
     statusStore.removeTag(tag)
     router.push(statusStore.tags[index]?.path as string)
   }
+}
+
+const handleLogout = () => {
+  useUserStore().handleLogout()
+  router.push('/login')
+  ElMessage.success('退出登录成功')
 }
 
 watch(
