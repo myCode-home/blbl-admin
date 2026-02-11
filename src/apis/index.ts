@@ -17,7 +17,7 @@ export const setMenuService = (data: any): Promise<any> => {
 }
 
 // 菜单权限列表 get /menu/list
-export const getMenuListService = (params: any) => {
+export const getMenuListService = (params: any): Promise<any> => {
     return request({
         url: '/menu/list',
         method: 'get',
