@@ -70,6 +70,7 @@ import { useUserStore } from '@/store/user'
 import { ElMessage } from 'element-plus'
 import { useRouter } from 'vue-router'
 import { getCheckCodeService, useAuthenticationService, useLoginService } from '@/apis/login'
+import { getMenuDataService } from '@/apis/index'
 
 // false为登录，true为注册
 const isLoginRegister = ref(false)

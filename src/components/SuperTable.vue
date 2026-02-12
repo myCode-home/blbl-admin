@@ -1,22 +1,28 @@
 <template>
   <el-card style="width: 100%">
-    <template #header>
-      <div v-if="$props.headerBtn" class="card-header">
+    <template v-if="$props.headerBtn" #header>
+      <div class="card-header">
         <slot name="headerBtn"></slot>
       </div>
     </template>
     <el-table border v-loading="props.tableLoading" :data="props.tableData" style="width: 100%">
       <el-table-column
-        v-for="item in [
-          { id: 'id', name: 'id' },
-          { id: 'name', name: '名字' },
-          { id: 'permissionName', name: '权限名称' },
-        ]"
+        v-for="item in props.columns"
         :key="item.id"
         :prop="item.id"
         :label="item.name"
-      />
-      <el-table-column label="操作">
+      >
+        <template v-if="item.id === 'create_time'" #default="scope">
+          <slot name="create_time" :row="scope.row"></slot>
+        </template>
+        <template v-if="item.id === 'permissions_id'" #default="scope">
+          <slot name="permissions_id" :row="scope.row"></slot>
+        </template>
+        <template v-if="item.id === 'active'" #default="scope">
+          <slot name="active" :row="scope.row"></slot>
+        </template>
+      </el-table-column>
+      <el-table-column v-if="props.showOperation" label="操作">
         <template #default="scope">
           <slot name="operation" :row="scope.row"></slot>
         </template>
@@ -37,11 +43,16 @@
 </template>
 
 <script lang="ts" setup>
+import type { ColumnsData } from '@/type/data'
 const emits = defineEmits(['size-change', 'current-change'])
 const props = defineProps({
   headerBtn: {
     type: Boolean,
     default: false,
+  },
+  showOperation: {
+    type: Boolean,
+    default: true,
   },
   tableLoading: {
     type: Boolean,
@@ -61,6 +72,10 @@ const props = defineProps({
   total: {
     type: Number,
     default: 0,
+  },
+  columns: {
+    type: Array<ColumnsData>,
+    default: () => [],
   },
 })
 </script>

@@ -26,10 +26,20 @@ export const getMenuListService = (params: any): Promise<any> => {
 }
 
 // 账号管理列表 get /auth/admin
-export const getUserListService = (params: any) => {
+export const getUserListService = (params: any): Promise<any> => {
     return request({
         url: '/auth/admin',
         method: 'get',
         params,
     })
+}
+
+// 账号管理修改 post /update/user
+export const setUserService = (data: any): Promise<any> => {
+    return request.post('/update/user', data)
+}
+
+// 菜单权限数据 get /user/getmenu
+export const getMenuDataService = (): Promise<any> => {
+    return request.get('/user/getmenu')
 }

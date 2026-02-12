@@ -8,6 +8,7 @@
       :total="total"
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
+      :columns="GroupColumns"
     >
       <template #operation="{ row }">
         <el-button type="primary" :icon="Edit" @click="handleEdit(row)">编辑</el-button>
@@ -63,8 +64,9 @@ import { getMenuService, setMenuService, getMenuListService } from '@/apis'
 import { ref, reactive, onMounted } from 'vue'
 import { ElMessage } from 'element-plus'
 import { Edit } from '@element-plus/icons-vue'
-const dialogLoading = ref(false)
+import { GroupColumns } from '@/utils/data'
 
+const dialogLoading = ref(false)
 // dialog相关的
 const status = reactive({
   title: '添加权限',
