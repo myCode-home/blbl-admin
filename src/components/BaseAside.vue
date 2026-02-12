@@ -11,19 +11,25 @@
     @close="handleClose"
   >
     <p class="log-header">{{ statusStore.isFold ? 'DIDI' : 'DIDI管理' }}</p>
-    <BaseMenu :routes="router.options.routes[0]?.children"> </BaseMenu>
+    <BaseMenu :routes="routes"> </BaseMenu>
   </el-menu>
 </template>
 
 <script setup lang="ts">
 import { useStatusStore } from '@/store/status'
-const statusStore = useStatusStore()
 import BaseMenu from '@/components/BaseMenu.vue'
-import { useRouter, useRoute } from 'vue-router'
+import { useRoute } from 'vue-router'
+import { onMounted, ref } from 'vue'
+import { useRoutesStore } from '@/store/routes'
 
-const router = useRouter()
+const statusStore = useStatusStore()
 const route = useRoute()
-// console.log(route.path)
+const routes = ref(useRoutesStore().routes)
+
+onMounted(() => {
+  routes.value = useRoutesStore().routes
+  console.log(routes.value, 'routes.value')
+})
 
 const handleClose = () => {}
 const handleOpen = () => {}

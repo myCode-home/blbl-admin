@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
+import { useRoutesStore } from './routes'
 
 export const useUserStore = defineStore('user', () => {
     const token = ref('')
@@ -26,6 +27,8 @@ export const useUserStore = defineStore('user', () => {
     const handleLogout = () => {
         removeToken()
         removeUserInfo()
+        const routesStore = useRoutesStore()
+        routesStore.cleanRoutes()
     }
 
     return {

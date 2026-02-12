@@ -39,7 +39,21 @@ export const setUserService = (data: any): Promise<any> => {
     return request.post('/update/user', data)
 }
 
-// 菜单权限数据 get /user/getmenu
-export const getMenuDataService = (): Promise<any> => {
-    return request.get('/user/getmenu')
+// 用户菜单权限 get /menu/permissions
+export const getMenuPermissionsService = (): Promise<any> => {
+    return request.get('/menu/permissions')
+}
+
+// 陪护师创建 post /companion
+export const setCompanionService = (data: any): Promise<any> => {
+    return request.post('/companion', data)
+}
+
+// 陪护师头像 get /photo/list
+export const getPhotoListService = (params: any): Promise<any> => {
+    return request({
+        url: '/photo/list',
+        method: 'get',
+        params,
+    })
 }

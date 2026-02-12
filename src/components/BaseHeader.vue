@@ -7,9 +7,9 @@
       <div class="tag-container">
         <el-tag
           size="large"
+          :closable="tag.name !== '账号管理'"
           v-for="tag in statusStore.tags"
           :key="tag.name"
-          :closable="tag.name !== '控制台'"
           :type="!tag.isActive ? 'info' : tag.type"
           @click="handleClick(tag)"
           @close="handleClose(tag)"
@@ -35,7 +35,7 @@
           </span>
           <template #dropdown>
             <el-dropdown-menu>
-              <el-dropdown-item icon="Plus" @click="handleLogout"> 退出登录</el-dropdown-item>
+              <el-dropdown-item icon="Pointer" @click="handleLogout"> 退出登录</el-dropdown-item>
             </el-dropdown-menu>
           </template>
         </el-dropdown>

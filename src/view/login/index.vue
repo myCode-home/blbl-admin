@@ -65,13 +65,15 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive } from 'vue'
+import { ref, reactive, toRaw } from 'vue'
 import { useUserStore } from '@/store/user'
 import { ElMessage } from 'element-plus'
 import { useRouter } from 'vue-router'
 import { getCheckCodeService, useAuthenticationService, useLoginService } from '@/apis/login'
-import { getMenuDataService } from '@/apis/index'
+import { getMenuPermissionsService } from '@/apis/index'
+import { useRoutesStore } from '@/store/routes'
 
+const routesStore = useRoutesStore()
 // false为登录，true为注册
 const isLoginRegister = ref(false)
 const router = useRouter()
@@ -158,15 +160,24 @@ const submitForm = async (form: any) => {
             userName: ruleForm.value.username,
             passWord: ruleForm.value.passWord,
           })
-          console.log(res, '登录接口返回数据')
           if (res.code === 10000) {
             ElMessage.success('登录成功！！！')
-            console.log(res.data)
 
-            router.push('/')
             useUserStore().setToken(res.data.token)
             useUserStore().setUserInfo(res.data.userInfo)
-            console.log(useUserStore().userInfo, 'userInfo', res.data.userInfo)
+
+            const resData = await getMenuPermissionsService()
+            await routesStore.handelRoutes(resData.data)
+
+            // 动态添加路由
+            toRaw(routesStore.routes).forEach((item: any) => {
+              router.addRoute('main', item)
+            })
+            console.log(router.options.routes, '动态添加路由后路由数据')
+
+            // 等待路由更新完成后再跳转
+            await router.isReady()
+            router.push('/')
             return
           }
           ElMessage.error(res.message?.msg || '登录失败')
@@ -178,7 +189,7 @@ const submitForm = async (form: any) => {
         }
       }
     } else {
-      ElMessage.error('校验不通过')
+      ElMessage.error('请输入正确的用户名和密码')
       btnStatus.loading = false
       btnStatus.disabled = false
     }
@@ -194,6 +205,9 @@ const checkBtn = reactive({
   disabled: false,
   timer: 60,
 })
+// 从 src/view/login/index.vue 到 src/view/
+// const routes = import.meta.glob('../../view/**/*.vue')
+// console.log(routes, '匹配到的Vue文件')
 
 // 验证码发送相关的函数
 let checkCodeTimer: any = null

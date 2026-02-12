@@ -22,7 +22,7 @@
   </div>
 
   <!-- 添加/编辑的dialog -->
-  <el-dialog v-model="dialogVisible" :title="status.title" width="500" :before-close="handleClose">
+  <el-dialog v-model="dialogVisible" :title="status.title" width="50%" :before-close="handleClose">
     <el-form
       ref="formRef"
       v-loading="dialogLoading"
