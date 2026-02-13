@@ -1,5 +1,4 @@
 <template>
-  <el-button type="primary" @click="visible = true">添加陪护师</el-button>
   <!-- 陪护师管理弹窗 -->
   <el-dialog v-model="visible" title="陪护师管理" width="50%">
     <el-form :model="form" :rules="rules" ref="formRef" label-width="100px">
@@ -60,14 +59,75 @@
       <el-button type="primary" @click="handleSelectAvatar">选择</el-button>
     </template>
   </el-dialog>
+  <super-table
+    ref="tableRef"
+    :headerBtn="true"
+    :tableData="tableData"
+    :total="total"
+    :columns="companionColumns"
+    :selection="true"
+    :params="params"
+    :tableLoading="loading"
+    :showOperation="true"
+    @size-change="handleChange"
+    @current-change="handleChange"
+    @selection-change="handleSelectionChange"
+  >
+    <template #create_time="{ row }">
+      {{ row.create_time ? new Date(row.create_time).toLocaleString() : '-' }}
+    </template>
+    <template #avatar="{ row }">
+      <el-image v-if="row.avatar" :src="row.avatar" fit="fill" style="width: 50px; height: 50px" />
+    </template>
+    <template #active="{ row }">
+      <el-tag :type="row.active ? 'success' : 'danger'">{{ row.active ? '正常' : '禁用' }}</el-tag>
+    </template>
+    <template #sex="{ row }">
+      {{ row.sex == 1 ? '男' : '女' }}
+    </template>
+    <template #headerBtn>
+      <el-button type="primary" icon="Plus" @click="handleAdd">添加</el-button>
+      <el-popconfirm
+        title="确认删除选中项吗？"
+        @cancel="tableRef.clearSelection()"
+        @confirm="handleDelete"
+      >
+        <template #reference>
+          <el-button :disabled="ids.length === 0" type="danger" icon="Delete">删除</el-button>
+        </template>
+      </el-popconfirm>
+    </template>
+    <template #operation="{ row }">
+      <el-button type="primary" icon="Edit" @click="handleEdit(row)">编辑</el-button>
+    </template>
+  </super-table>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted, toRaw } from 'vue'
 import { ElMessage } from 'element-plus'
-import { getPhotoListService, setCompanionService } from '@/apis/index'
+import {
+  getPhotoListService,
+  setCompanionService,
+  getCompanionListService,
+  deleteCompanionService,
+} from '@/apis/index'
+import { companionColumns } from '@/utils/data'
 
+const isEdit = ref(false)
 const visible = ref(false)
+// 可以再before-close中调用clearSelection方法
+const initForm = () => {
+  form.value = {
+    name: '',
+    id: '',
+    mobile: '',
+    age: 18,
+    sex: '',
+    avatar: '',
+    active: 1,
+  }
+}
 const form = ref({
   name: '',
   id: '',
@@ -93,20 +153,22 @@ const handleSubmit = async () => {
     await formRef.value.validate()
     const res = await setCompanionService(form.value)
     if (res.code === 10000) {
-      ElMessage.success('添加陪护师成功')
+      ElMessage.success(isEdit.value ? '编辑成功' : '添加成功')
       visible.value = false
+      getCompanionList()
       formRef.value.resetFields()
     } else {
-      ElMessage.error(res.message || '添加陪护师失败')
+      ElMessage.error(isEdit.value ? '编辑失败' : '添加失败')
     }
   } catch (error) {
-    ElMessage.error('添加陪护师失败')
+    ElMessage.error(isEdit.value ? '编辑失败' : '添加失败')
   } finally {
+    loading.value = false
   }
 }
 const handleCancel = () => {
   visible.value = false
-  formRef.value.resetFields()
+  initForm()
 }
 
 const avatarVisible = ref(false)
@@ -148,6 +210,87 @@ const getAvatarList = async () => {
     avatarLoading.value = false
   }
 }
+// 表格状态相关的数据
+const tableData = ref([])
+const total = ref(0)
+const params = ref({
+  pageSize: 10,
+  pageNum: 1,
+})
+const tableRef = ref()
+const loading = ref(false)
+// 获取陪护师列表
+const getCompanionList = async () => {
+  loading.value = true
+  try {
+    const res = await getCompanionListService(params.value)
+    if (res.code === 10000) {
+      tableData.value = res.data.list
+      total.value = res.data.total
+    }
+  } catch (error) {
+    ElMessage.error('获取陪护师列表失败')
+  } finally {
+    loading.value = false
+  }
+}
+//添加操做
+const handleAdd = () => {
+  initForm()
+  isEdit.value = false
+  visible.value = true
+}
+// 删除操做
+const handleDelete = async () => {
+  // 如果没有选中任何数据，提示用户选择数据后删除
+  if (ids.value.length === 0) {
+    ElMessage.error('请选择要删除的陪护师')
+    return
+  }
+  // 删除选中的数据
+  try {
+    console.log(JSON.stringify({ id: ids.value }))
+
+    // return
+    // id组成的数组
+    const res = await deleteCompanionService({ id: selectedRows.value })
+    if (res.code === 10000) {
+      ElMessage.success('删除成功')
+      getCompanionList()
+    } else {
+      ElMessage.error(res.message || '删除失败')
+    }
+  } catch (error) {
+    ElMessage.error('删除失败')
+  } finally {
+    ids.value = []
+    selectedRows.value = []
+    tableRef.value.clearSelection()
+  }
+}
+// 编辑操做
+const handleEdit = (row: any) => {
+  isEdit.value = true
+  visible.value = true
+  form.value = {
+    ...row,
+  }
+}
+// 选择的数据
+const selectedRows = ref()
+const ids = ref([])
+// 选择数据
+const handleSelectionChange = (val: any) => {
+  selectedRows.value = val
+  ids.value = val.map((item: any) => item.id)
+}
+// 分页数据切换了
+const handleChange = async (val: any) => {
+  getCompanionList()
+}
+onMounted(() => {
+  getCompanionList()
+})
 </script>
 <style scoped lang="scss">
 .avatar-item {

@@ -5,7 +5,15 @@
         <slot name="headerBtn"></slot>
       </div>
     </template>
-    <el-table border v-loading="props.tableLoading" :data="props.tableData" style="width: 100%">
+    <el-table
+      ref="tableRef"
+      @selection-change="handleSelectionChange"
+      border
+      v-loading="props.tableLoading"
+      :data="props.tableData"
+      style="width: 100%"
+    >
+      <el-table-column v-if="props.selection" type="selection" :selectable="selection" width="55" />
       <el-table-column
         v-for="item in props.columns"
         :key="item.id"
@@ -20,6 +28,12 @@
         </template>
         <template v-if="item.id === 'active'" #default="scope">
           <slot name="active" :row="scope.row"></slot>
+        </template>
+        <template v-if="item.id === 'avatar'" #default="scope">
+          <slot name="avatar" :row="scope.row"></slot>
+        </template>
+        <template v-if="item.id === 'sex'" #default="scope">
+          <slot name="sex" :row="scope.row"></slot>
         </template>
       </el-table-column>
       <el-table-column v-if="props.showOperation" label="操作">
@@ -43,8 +57,9 @@
 </template>
 
 <script lang="ts" setup>
+import { toRaw, ref } from 'vue'
 import type { ColumnsData } from '@/type/data'
-const emits = defineEmits(['size-change', 'current-change'])
+const emits = defineEmits(['size-change', 'current-change', 'selection-change'])
 const props = defineProps({
   headerBtn: {
     type: Boolean,
@@ -77,5 +92,24 @@ const props = defineProps({
     type: Array<ColumnsData>,
     default: () => [],
   },
+  selection: {
+    type: Boolean,
+    default: false,
+  },
+})
+const selection = (row: any) => {
+  return true
+}
+
+const handleSelectionChange = (row: any) => {
+  emits('selection-change', toRaw(row))
+}
+const tableRef = ref()
+const clearSelection = () => {
+  tableRef.value.clearSelection()
+}
+
+defineExpose({
+  clearSelection,
 })
 </script>

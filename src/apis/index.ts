@@ -57,3 +57,17 @@ export const getPhotoListService = (params: any): Promise<any> => {
         params,
     })
 }
+
+// 获取陪护师列表 get /companion/list
+export const getCompanionListService = (params: any): Promise<any> => {
+    return request({
+        url: '/companion/list',
+        method: 'get',
+        params,
+    })
+}
+
+// 删除陪护师 post /delete/companion
+export const deleteCompanionService = (data: any): Promise<any> => {
+    return request.post('/delete/companion', data)
+}
