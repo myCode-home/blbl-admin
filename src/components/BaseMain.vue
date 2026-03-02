@@ -1,5 +1,5 @@
 <template>
-  <el-main style="background-color: #efefef">
+  <el-main class="base-main">
     <el-scrollbar height="100%">
       <layout-header />
       <router-view #default="{ Component }">
@@ -12,3 +12,10 @@
 <script setup lang="ts">
 import LayoutHeader from './LayoutHeader.vue'
 </script>
+
+<style scoped lang="scss">
+.base-main {
+  background-color: #efefef;
+  overflow-x: hidden;
+}
+</style>
