@@ -35,6 +35,9 @@
         <template v-if="item.id === 'sex'" #default="scope">
           <slot name="sex" :row="scope.row"></slot>
         </template>
+        <template v-if="item.id === 'trade_state'" #default="scope">
+          <slot name="trade_state" :row="scope.row"></slot>
+        </template>
       </el-table-column>
       <el-table-column v-if="props.showOperation" label="操作">
         <template #default="scope">

@@ -71,3 +71,19 @@ export const getCompanionListService = (params: any): Promise<any> => {
 export const deleteCompanionService = (data: any): Promise<any> => {
     return request.post('/delete/companion', data)
 }
+// 首页 get /report
+export const getReportService = (): Promise<any> => {
+    return request.get('/report')
+}
+// /admin/order 订单列表
+export const getOrderListService = (params: any): Promise<any> => {
+    return request({
+        url: '/admin/order',
+        method: 'get',
+        params,
+    })
+}
+// /update/order 服务状态完成
+export const updateOrderService = (data: any): Promise<any> => {
+    return request.post('/update/order', data)
+}

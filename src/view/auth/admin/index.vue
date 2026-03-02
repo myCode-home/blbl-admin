@@ -17,7 +17,7 @@
       {{ permissions(row.permissions_id) }}
     </template>
     <template #operation="{ row }">
-      <el-button type="primary" @click="handleEdit(row)">编辑</el-button>
+      <el-button type="primary" icon="Edit" @click="handleEdit(row)">编辑</el-button>
     </template>
   </SuperTable>
   <el-dialog title="编辑" v-model="dialogVisible" width="50%">
